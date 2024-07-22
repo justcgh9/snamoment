@@ -1,0 +1,132 @@
+stages:
+  - clone
+  - build
+  - coverage_test
+  - conteiner_test
+  - publish
+  - deploy
+
+clone-job:
+  stage: clone
+  script:
+    - echo "Clonning the repository from GitLab..."
+    - git clone "https://gitlab.pg.innopolis.university/g.bugaev/sna-project"
+
+build-job:
+  stage: build
+  script:
+    - echo "Building Docker image..."
+    - docker build -t json2video_image .
+
+coverage_test-job:
+  stage: coverage_test
+  before_script:
+    - echo "Installing necessary libraties for coverage testing of the application..."
+    - pip install coverage
+    - pip install -r requirements.txt
+  script:
+    - echo "Starting the coverage testing:"
+    - convert -list configure
+    - export IMAGEMAGICK_BINARY=/usr/bin/convert
+    - python3 -m coverage run -m unittest
+    - python3 -m coverage report Core/json_parser.py Core/form.py Core/video_builder.py
+    - echo "The coverage testing is finished."
+
+conteiner_test-job:
+  stage: conteiner_test
+  script:
+    - echo "Down application and remove containers if there are..."
+    - docker-compose down
+    - CID=$(docker ps -q -f status=running -f name=json2video_1)
+    - if [ "${CID}" ]; then
+    - docker stop json2video_1
+    - docker remove json2video_1
+    - fi
+    - CID=$(docker ps -q -f status=running -f name=json2video_2)
+    - if [ "${CID}" ]; then
+    - docker stop json2video_2
+    - docker remove json2video_2
+    - fi
+    - CID=$(docker ps -q -f status=running -f name=nginx)
+    - if [ "${CID}" ]; then
+    - docker stop nginx
+    - docker remove nginx
+    - fi
+    - CID=$(docker ps -q -f status=running -f name=nginx_prometheus_exporter)
+    - if [ "${CID}" ]; then
+    - docker stop nginx_prometheus_exporter
+    - docker remove nginx_prometheus_exporter
+    - fi
+    - CID=$(docker ps -q -f status=running -f name=prometheus)
+    - if [ "${CID}" ]; then
+    - docker stop prometheus
+    - docker remove prometheus
+    - fi
+    - CID=$(docker ps -q -f status=running -f name=grafana)
+    - if [ "${CID}" ]; then
+    - docker stop grafana
+    - docker remove grafana
+    - fi
+
+    - echo "Start application testing..."
+    - docker-compose up -d --build
+    - sleep 10
+
+    - http_code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:1234)
+    - if [[ $http_code -ge 200 && $http_code -lt 300 ]]; then
+    - echo "Website on port 1234 is reachable and returned HTTP status code"
+    - else
+    - echo "Website on port 1234 is not reachable or did not return a successful HTTP status code"
+    - false;
+    - fi
+
+    - http_code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:1235)
+    - if [[ $http_code -ge 200 && $http_code -lt 300 ]]; then
+    - echo "Website on port 1235 is reachable and returned HTTP status code"
+    - else
+    - echo "Website on port 1235 is not reachable or did not return a successful HTTP status code"
+    - false;
+    - fi
+
+    - http_code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:9113/metrics)
+    - if [[ $http_code -ge 200 && $http_code -lt 300 ]]; then
+    - echo "Nginx prometheus exporter is accessible"
+    - else
+    - echo "Nginx prometheus exporter is not accessible"
+    - false;
+    - fi
+
+    - http_code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:9090/graph)
+    - if [[ $http_code -ge 200 && $http_code -lt 300 ]]; then
+    - echo "Prometheus is accessible"
+    - else
+    - echo "Prometheus is not accessible"
+    - false;
+    - fi
+
+    - http_code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3000/login)
+    - if [[ $http_code -ge 200 && $http_code -lt 300 ]]; then
+    - echo "Grafana is accessible"
+    - else
+    - echo "Grafana is not accessible"
+    - false;
+    - fi
+
+    - echo "Removing artifacts after testing..."
+    - docker-compose down
+
+publish-job:
+  stage: publish
+  before_script:
+    - echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_LOGIN --password-stdin
+  script:
+    - echo "Uploading of the image to the Docker Hub..."
+    - docker tag json2video_image nai1ka/json2video
+    - docker push nai1ka/json2video
+
+deploy-job:
+  stage: deploy
+  environment: production
+  script:
+    - echo "Deploying JSON2Video application to the server..."
+    - docker-compose up -d

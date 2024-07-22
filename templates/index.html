@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main_page_new.css') }}">
+    <title>Main page</title>
+</head>
+<body>
+
+    <header>
+       <a href="{{ url_for('index') }}" class="logo"><h2>J2V</h2></a>
+
+        <div class="bx bx-menu" id="menu-icon"></div>
+            <!-- <h2 class="logo"><a href="#">J2V</a></h2> -->
+            <ul class="navbar">
+                <li><button onclick="window.location.href='{{ url_for('docs_page') }}'">documentation</button></li>
+                <li><button onclick="window.location.href='{{ url_for('templates_page') }}'">templates</button></li>
+                <li><button onclick="window.location.href='{{ url_for('contacts_page') }}'">contacts</button></li>
+            </ul>
+
+            <div class ="header-btn">
+                {% if current_user.is_authenticated %}
+                    <button class="name" type="button" onclick="window.location.href='{{ url_for('user_profile') }}'">{{ current_user.username }}</button>
+                    {% else %}
+                    <button class = "sign-up" type="button" onclick="window.location.href='{{ url_for('signup') }}';"> sign up</button>
+                 <button class="sign-in" type="button" onclick="window.location.href='{{ url_for('login') }}';">sign in</button>
+
+
+                    {% endif %}
+
+                <!-- <a href="#" class = "name">name</a> -->
+                <!-- <button type="button">sign up</buttom>
+                <button type="button">sign in</buttom> -->
+            </div>
+
+    </header>
+
+    <section class="layers">
+        <h1>JSON2Video</h1>
+        <div class="file-upload-index">
+            <form method="POST" action="" enctype="multipart/form-data">
+                <input type="file" id="file" accept=".json" onchange="form.submit()">
+                <label for="file-input" class="file-input-label">Select a file of drop it here</label>
+                <input type="file" id="file-input" name="file" accept=".json" onchange="form.submit()">
+            </form>
+        </div>
+            <!-- <div class="select-button">
+                <button>Select a file of drop it here</button>
+            </div> -->
+    </section>
+</body>
+</html>

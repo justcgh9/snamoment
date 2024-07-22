@@ -1,0 +1,1 @@
+{  "title": "Test",  "resolution": "full-hd",  "width": 1920,  "height": 1080,  "fps": 1,  "ai": false,  "elements": [    {      "type": "text",      "text": "Капибара верхом на крокодиле",      "start": 0,      "end": 5    }  ]}

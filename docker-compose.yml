@@ -1,0 +1,84 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: json2video_1
+    ports:
+      - "1234:1234"
+    volumes:
+      - uploads:/app/uploads
+    networks:
+      - default
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://localhost:514"
+  app2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: json2video_2
+    ports:
+      - "1235:1234"
+    volumes:
+      - uploads:/app/uploads
+    networks:
+      - default
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://localhost:514"
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app
+      - app2
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+  nginx_prometheus_exporter:
+    image: nginx/nginx-prometheus-exporter:1.1.0
+    container_name: nginx_prometheus_exporter
+    ports:
+      - "9113:9113"
+    command:
+      - "--nginx.scrape-uri=http://46.253.143.250:80/status"
+  node-exporter:
+    image: prom/node-exporter:v1.3.1
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude'
+      - '^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)'
+networks:
+  default:
+    driver: bridge
+volumes:
+  uploads:
+  grafana_data:

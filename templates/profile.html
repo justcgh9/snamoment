@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+    <title>Profile</title>
+</head>
+<body>
+<header>
+        <a href="{{ url_for('index') }}" class="logo"><h2>J2V</h2></a>
+
+        <div class="bx bx-menu" id="menu-icon"></div>
+            <!-- <h2 class="logo"><a href="#">J2V</a></h2> -->
+            <ul class="navbar">
+               <li><button onclick="window.location.href='{{ url_for('docs_page') }}'">documentation</button></li>
+               <li><button onclick="window.location.href='{{ url_for('templates_page') }}'">templates</button></li>
+                <li><button onclick="window.location.href='{{ url_for('contacts_page') }}'">contacts</button></li>
+            </ul>
+
+            <div class ="header-btn">
+                {% if current_user.is_authenticated %}
+                    <button class="name" type="button" onclick="window.location.href='{{ url_for('user_profile') }}'">{{ current_user.username }}</button>
+                    {% else %}
+                    <button class = "sign-up" type="button" onclick="window.location.href='{{ url_for('signup') }}';"> sign up</button>
+                 <button class="sign-in" type="button" onclick="window.location.href='{{ url_for('login') }}';">sign in</button>
+
+
+                    {% endif %}
+
+                <!-- <a href="#" class = "name">name</a> -->
+                <!-- <button type="button">sign up</buttom>
+                <button type="button">sign in</buttom> -->
+            </div>
+
+    </header>
+<div class="profile-h4">
+    <h4>Profile</h4>
+</div>
+
+
+<div class="switch">
+    <div class="horizontal">
+        <ul>
+            <div class="history-btn">
+                <li>
+                    <button class="left" onclick="window.location.href='{{ url_for('user_profile_history') }}'">
+                        history
+                    </button>
+                </li>
+            </div>
+        </ul>
+
+        <div class="form-container">
+            <form id="user-form" action="" method="post" enctype="multipart/form-data">
+               <!-- <input type="hidden" name="csrf_token" value=" csrf_token() }}"> -->
+                <div class="form-group">
+                    <label for="name">My name:</label>
+                    <input type="text" id="name" name="name" placeholder="{{ current_user.username }}">
+                </div>
+                <div class="form-group">
+                    <label for="Password">Password:</label>
+                    <input type="text" id="Password" name="password" placeholder="******">
+                </div>
+                <div class="form-group">
+                    <label for="name">YouTube account:</label>
+                    <button class="link">Link</button>
+                    <!-- <input type="text" id="name" name="name" value="Name"> -->
+                </div>
+                <!-- <input type="submit" value="Save"> -->
+            </form>
+        </div>
+    </div>
+
+    <ul class="btn-container-second">
+        <li>
+            <button class="left">settings</button>
+        </li>
+    </ul>
+
+</div>
+
+<div class="save-button-profile">
+    <button onclick="getElementById('user-form').submit()">Save</button>
+</div>
+
+</body>
+</html>

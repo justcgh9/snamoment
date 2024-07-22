@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/templates.css') }}">
+    <title>Templates</title>
+
+<body>
+    <header>
+       <a href="{{ url_for('index') }}" class="logo"><h2>J2V</h2></a>
+
+        <div class="bx bx-menu" id="menu-icon"></div>
+            <!-- <h2 class="logo"><a href="#">J2V</a></h2> -->
+            <ul class="navbar">
+                <li><button onclick="window.location.href='{{ url_for('docs_page') }}'">documentation</button></li>
+                 <li><button onclick="window.location.href='{{ url_for('templates_page') }}'">templates</button></li>
+                <li><button onclick="window.location.href='{{ url_for('contacts_page') }}'">contacts</button></li>
+            </ul>
+
+            <div class ="header-btn">
+                {% if current_user.is_authenticated %}
+                    <button class="name" type="button" onclick="window.location.href='{{ url_for('user_profile') }}'">{{ current_user.username }}</button>
+                    {% else %}
+                    <button class = "sign-up" type="button" onclick="window.location.href='{{ url_for('signup') }}';"> sign up</button>
+                 <button class="sign-in" type="button" onclick="window.location.href='{{ url_for('login') }}';">sign in</button>
+
+
+                    {% endif %}
+
+                <!-- <a href="#" class = "name">name</a> -->
+                <!-- <button type="button">sign up</buttom>
+                <button type="button">sign in</buttom> -->
+            </div>
+
+    </header>
+
+    <div class="container">
+        <h1>Templates</h1>
+        <div class="video-container">
+
+            <div class="video">
+                <div class="video-box">
+                 <video src="static/videos/first.mp4" muted controls></video>
+                </div>
+                <div class="video-title"><a href="#">Template 1</a></div>
+            </div>
+            <div class="video">
+                <div class="video-box">
+                <video src="static/videos/second.mp4" muted controls></video>
+                </div>
+                <div class="video-title"><a href="#">Photo + text</a></div>
+            </div>
+            <div class="video">
+                <div class="video-box">
+                <video src="static/videos/thrd.mp4" muted controls></video>
+                </div>
+                <div class="video-title"><a href="#">Photos</a></div>
+            </div>
+            <div class="video">
+                <div class="video-box">
+                <video src="static/videos/fourth.mp4" muted controls></video>
+                </div>
+                <div class="video-title"><a href="#">Interactive video</a></div>
+            </div>
+
+        </div>
+
+        <!-- <div class="popup-video">
+            <span>&times;</span>
+            <div class="pop">
+                <video src="img/video1.mp4" muted autoplay controls"></video>
+            <button class="edit">Edit</button>
+            </div>
+        </div> -->
+    </div>
+
+    <script>
+        document.querySelectorAll('.video-container video').forEach(vid =>{
+            vid.onclick = () => {
+                document.querySelector('.popup-video').style.display = 'block';
+                document.querySelector('.popup-video video').src = vid.getAttribute('src');
+            }
+        });
+
+        document.querySelector('.popup-video span').onclick = () => {
+            document.querySelector('.popup-video').style.display = 'none';
+        }
+        window.addEventListener('scroll', function() {
+  var navbar = document.querySelector('.navbar');
+  
+  if (window.innerWidth <= 1070) {
+    if (window.scrollY > 0) {
+      navbar.classList.add('hidden');
+    } else {
+      navbar.classList.remove('hidden');
+    }
+  }
+});
+    </script>
+</body>
+</html>

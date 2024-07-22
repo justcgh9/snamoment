@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/documentation.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <title>Documentation page</title>
+</head>
+<body>
+<div class = "top-header">
+    <header>
+       <a href="{{ url_for('index') }}" class="logo"><h2>J2V</h2></a>
+
+        <div class="bx bx-menu" id="menu-icon"></div>
+            <!-- <h2 class="logo"><a href="#">J2V</a></h2> -->
+            <ul class="navbar">
+                <li><button onclick="window.location.href='{{ url_for('docs_page') }}'">documentation</button></li>
+                 <li><button onclick="window.location.href='{{ url_for('templates_page') }}'">templates</button></li>
+                <li><button onclick="window.location.href='{{ url_for('contacts_page') }}'">contacts</button></li>
+            </ul>
+
+            <div class ="header-btn">
+                {% if current_user.is_authenticated %}
+                    <button class="name" type="button" onclick="window.location.href='{{ url_for('user_profile') }}'">{{ current_user.username }}</button>
+                    {% else %}
+                    <button class = "sign-up" type="button" onclick="window.location.href='{{ url_for('signup') }}';"> sign up</button>
+                 <button class="sign-in" type="button" onclick="window.location.href='{{ url_for('login') }}';">sign in</button>
+
+
+                    {% endif %}
+
+                <!-- <a href="#" class = "name">name</a> -->
+                <!-- <button type="button">sign up</buttom>
+                <button type="button">sign in</buttom> -->
+            </div>
+
+    </header>
+</div>
+    <div class="content">
+    <nav id="navbar">
+{#        <header>Documentation</header>#}
+        <ul id="ul-navbar">
+            <li>
+                <a class="nav-link" href="#Introduction">Introduction</a>
+            </li>
+
+            <li>
+                <a class="nav-link" href="#Usage">Usage</a>
+            </li>
+
+            <li>
+                <a class="nav-link" href="#Supported_JSON_Format">Supported JSON Format</a>
+            </li>
+
+            <li>
+                <a class="nav-link" href="#Video_Settings">Video Settings</a>
+            </li>
+
+        </ul>
+    </nav>
+    <main id="main-doc">
+
+        <section class="main-section" id="Introduction">
+            <header>Introduction</header>
+            <p>Welcome to the JSON to Video Converter documentation!</p>
+            <p>This website allows you to convert JSON files to videos.
+          The conversion process takes a JSON file as input and generates a video that visually represents the data in the JSON file.</p>
+        </section>
+
+        <section class="main-section" id="Usage">
+            <header>Usage</header>
+            <p>To convert a JSON file to a video, follow these steps:</p>
+            <ol>
+                <li>
+                  Prepare your JSON file. Make sure it contains the necessary data for visualization.
+                  The structure of the JSON file should be compatible with the video generation process.
+                </li>
+                <li>
+                  Open the JSON2Video website in your web browser.
+                </li>
+                <li>
+                  Click on the "Select a file or drop it here" button to select the JSON file you want to convert.
+                </li>
+                <li>
+                  Optionally, customize the video settings such as resolution and extension.
+                </li>
+                <li>
+                  Click on the "Convert" button to start the conversion process.
+                </li>
+                <li>
+                  Wait for the conversion to complete. The generated video will be available for download or upload.
+                </li>
+              </ol>
+        </section>
+
+        <section class="main-section" id="Supported_JSON_Format">
+            <header>Supported JSON format</header>
+            <p>The JSON file should adhere to a specific format to ensure successful conversion.</p>
+                <p>Here is an example:</p>
+            <p> </p>
+                <pre>
+  {"title": "Test",
+  "resolution": "full-hd",
+  "width": 1920,
+  "height": 1080,
+  "fps": 20,
+  "elements": [
+    {
+      "type": "text",
+      "text": "Hello world!",
+      "start": 0,
+      "end": 5,
+      "fontSize": 100
+    },
+    {
+      "type": "image",
+      "src": "https://innopolis.com/uploads/thumbs/universitet-innopolis-3e9c6a61e7-1a9f4e6652b3a80977c0e9190611e142.jpeg",
+      "start": 0,
+      "end": 5
+
+    }
+  ]
+}
+                </pre>
+        </section>
+
+        <section class="main-section" id="Video_Settings">
+            <header>Video Settings</header>
+            <p>The JSON to Video Converter provides options to customize the generated video.
+                You can modify the following settings:</p>
+                <ul>
+                    <li>
+                      Resolution: Choose the desired width and height for the video in pixels.
+                    </li>
+                    <li>
+                      Frame Rate: Specify the number of frames per second for the video.
+                    </li>
+                    <li>
+                      Encoding Format: Select the video encoding format, such as MP4 or WebM, depending on the supported formats by the converter.
+                  </li>
+                  <li>
+                  Quality: Adjust the video quality or compression level.
+                  </li>
+                  <li>
+                  Additional Options: Some converters may offer additional options like adding audio, transitions, or effects to the video.
+                  </li>
+                  </ul>
+        </section>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    <title>Preview</title>
+</head>
+<body>
+    <div class="top-buttons">
+        <button>documentation</button>
+        <button>templates</button>
+        <button>contacts</button>
+        <div class = "rectangular-buttons">
+            {% if current_user.is_authenticated %}
+                <button class="profile" type="button" onclick="window.location.href='{{ url_for('user_profile') }}'">{{ current_user.username }}</button>
+            {% else %}
+                <button class="sign-up" type="button" onclick="window.location.href='{{ url_for('signup') }}';">sign up</button>
+                <button class="sign-in" type="button" onclick="window.location.href='{{ url_for('login') }}';">sign in</button>
+            {% endif %}
+        </div>
+    </div>
+    <h4>Upload</h4>
+    <div class="video_wrapper">
+        <video controls>
+            <source src="{{ url_for('media_video', filename=video_dest) }}" type="video/mp4">
+            Your browser does not support mp4 videos, change your browser!
+        </video>
+    </div>
+    <div class="bottom-button">
+        <form action="" method="post" enctype="multipart/form-data">
+            <div class="form-group-youtube">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" value="First video">
+            </div>
+
+            <div class="form-group-youtube">
+                <label for="desc">Description:</label>
+                <input type="text" id="desc" name="desc" value="My first video">
+            </div>
+            <div class="save-video-info">
+                <button class="upload" name="upload" value="upload">Upload!</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

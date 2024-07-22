@@ -1,0 +1,16 @@
+{
+  "title": "SecondVideo",
+  "resolution": "full-hd",
+  "width": 1920,
+  "height": 1080,
+  "transition": "fadeout",
+  "fps": 1,
+  "elements": [
+    {
+      "type": "image",
+      "src": "https://cdn.vox-cdn.com/thumbor/Ns5q9fIkrUYuauPpp3kyoY0S-Po=/0x0:4244x2824/1200x800/filters:focal(1783x1073:2461x1751)/cdn.vox-cdn.com/uploads/chorus_image/image/72031570/1246039762.0.jpg",
+      "start": 0,
+      "end": 5
+    }
+  ]
+}
